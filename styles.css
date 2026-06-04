@@ -450,13 +450,13 @@ section[id] { scroll-margin-top: 84px; }
 }
 
 @media (max-width: 760px) {
-  /* celular usa o vídeo vertical inteiro (9:16) */
-  .hero__video-wrap { width: clamp(240px, 72vw, 380px); aspect-ratio: 9 / 16; }
+  /* SOMENTE CELULAR: cards mais pra cima (faixa não cobre) + faixa um pouco acima */
+  .float-card, .float-rate { bottom: clamp(165px, 42vw, 220px); }
+  .marquee { margin-top: clamp(-150px, -26vw, -100px); }
 }
 
 @media (max-width: 480px) {
-  .hero__video-wrap { width: 80vw; }
-  .float-card, .float-rate { padding: 12px 13px; bottom: 30px; }
+  .float-card, .float-rate { padding: 12px 13px; }
   .float-card__num { font-size: 1.4rem; }
 }
 
