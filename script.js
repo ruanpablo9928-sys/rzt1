@@ -41,6 +41,7 @@
         v.appendChild(s); v.load(); safePlay(v);
       });
     };
+    apply(); // escolhe o vídeo certo JÁ no carregamento (o atributo media do <source> não é confiável no celular)
     if (mq.addEventListener) mq.addEventListener('change', apply);
     else if (mq.addListener) mq.addListener(apply);
   }
