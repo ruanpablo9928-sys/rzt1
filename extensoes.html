@@ -56,14 +56,58 @@
     </div>
 
     <p class="soon__eyebrow">EXTENSÕES</p>
-    <h1 class="soon__title">EM CONSTRUÇÃO</h1>
-    <p class="soon__sub">Estou montando algo especial aqui. Volte em breve! 🚧</p>
 
-    <a class="btn-pill btn-pill--lg soon__btn" href="index.html">
+    <article class="soon-card">
+      <span class="soon-card__badge"><i aria-hidden="true"></i> EM CONSTRUÇÃO</span>
+      <h1 class="soon-card__name">Nocrus <span>v0.1</span></h1>
+      <p class="soon-card__desc">AI CODING · FREE FOR AE</p>
+
+      <div class="countdown" id="countdown" aria-label="Contagem regressiva para o lançamento">
+        <div class="cd"><b id="cd-d">10</b><i>dias</i></div>
+        <span class="cd__sep" aria-hidden="true">:</span>
+        <div class="cd"><b id="cd-h">00</b><i>horas</i></div>
+        <span class="cd__sep" aria-hidden="true">:</span>
+        <div class="cd"><b id="cd-m">00</b><i>min</i></div>
+        <span class="cd__sep" aria-hidden="true">:</span>
+        <div class="cd"><b id="cd-s">00</b><i>seg</i></div>
+      </div>
+
+      <p class="soon-card__note" id="cd-note">Lançamento em breve 🚀</p>
+    </article>
+
+    <a class="btn-pill soon__btn" href="index.html">
       Voltar para o site
       <span class="btn-pill__arrow" aria-hidden="true">↗</span>
     </a>
   </main>
+
+  <script>
+    (function () {
+      // alvo: 10 dias a partir de 04/06/2026 -> 14/06/2026
+      var target = new Date('2026-06-14T00:00:00').getTime();
+      var d = document.getElementById('cd-d'),
+          h = document.getElementById('cd-h'),
+          m = document.getElementById('cd-m'),
+          s = document.getElementById('cd-s'),
+          note = document.getElementById('cd-note');
+      var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+      function tick() {
+        var diff = target - new Date().getTime();
+        if (diff <= 0) {
+          d.textContent = '00'; h.textContent = '00'; m.textContent = '00'; s.textContent = '00';
+          if (note) note.textContent = 'Disponível em breve! 🚀';
+          return;
+        }
+        var sec = Math.floor(diff / 1000);
+        d.textContent = pad(Math.floor(sec / 86400));
+        h.textContent = pad(Math.floor((sec % 86400) / 3600));
+        m.textContent = pad(Math.floor((sec % 3600) / 60));
+        s.textContent = pad(sec % 60);
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
 
 </body>
 </html>

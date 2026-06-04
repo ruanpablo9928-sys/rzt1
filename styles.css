@@ -503,6 +503,64 @@ section[id] { scroll-margin-top: 84px; }
 }
 .soon__btn { position: relative; margin-top: clamp(28px, 4vw, 40px); }
 
+/* card do Nocrus + contador */
+.soon-card {
+  position: relative;
+  margin: clamp(14px, 2vw, 22px) auto 0;
+  max-width: 480px;
+  padding: clamp(24px, 4vw, 38px) clamp(22px, 4vw, 40px);
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(26,75,255,.16), rgba(13,16,32,.65));
+  border: 1px solid rgba(91, 134, 255, .35);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255,255,255,.08);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+.soon-card__badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 14px; border-radius: 999px;
+  background: rgba(255, 170, 40, .14); border: 1px solid rgba(255, 180, 60, .5);
+  color: #ffce85; font-weight: 800; font-size: .72rem; letter-spacing: .14em;
+}
+.soon-card__badge i {
+  width: 8px; height: 8px; border-radius: 999px; background: #ffb13c;
+  box-shadow: 0 0 10px #ffb13c; animation: blink 1.4s var(--ease-soft) infinite;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: .25; } }
+.soon-card__name {
+  font-family: var(--display); text-transform: uppercase;
+  font-size: clamp(2rem, 7vw, 3.2rem); line-height: 1;
+  margin: 16px 0 0; letter-spacing: .01em;
+}
+.soon-card__name span { color: var(--blue-light); }
+.soon-card__desc {
+  color: #c4d6ff; font-weight: 800; letter-spacing: .14em;
+  font-size: clamp(.8rem, 2vw, .95rem); margin-top: 10px;
+}
+.countdown {
+  display: flex; align-items: flex-start; justify-content: center; gap: clamp(6px, 1.4vw, 12px);
+  margin-top: clamp(22px, 3.4vw, 30px);
+}
+.cd {
+  display: flex; flex-direction: column; align-items: center;
+  min-width: clamp(54px, 14vw, 70px);
+  padding: 12px 6px; border-radius: 14px;
+  background: var(--card); border: 1px solid var(--line);
+}
+.cd b {
+  font-family: var(--display); font-size: clamp(1.7rem, 6vw, 2.6rem); line-height: 1;
+  color: #eaf1ff; text-shadow: 0 0 20px rgba(110, 165, 255, .7);
+  font-variant-numeric: tabular-nums;
+}
+.cd i {
+  font-style: normal; color: var(--muted); font-weight: 700;
+  font-size: .64rem; letter-spacing: .1em; margin-top: 7px; text-transform: uppercase;
+}
+.cd__sep {
+  font-family: var(--display); color: var(--blue-light);
+  font-size: clamp(1.4rem, 5vw, 2rem); line-height: 1; padding-top: 10px;
+}
+.soon-card__note { color: var(--muted); font-size: .9rem; margin-top: clamp(16px, 2.4vw, 22px); }
+
 /* =========================================================
    RESPONSIVO
    ========================================================= */
