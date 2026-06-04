@@ -450,9 +450,14 @@ section[id] { scroll-margin-top: 84px; }
 }
 
 @media (max-width: 760px) {
-  /* SOMENTE CELULAR: cards mais pra cima (faixa não cobre) + faixa um pouco acima */
-  .float-card, .float-rate { bottom: clamp(165px, 42vw, 220px); }
+  /* SOMENTE CELULAR */
+  /* faixa azul continua na transição (embaixo); faixa branca sobe pro topo do vídeo */
   .marquee { margin-top: clamp(-150px, -26vw, -100px); }
+  .marquee__band--white { top: calc(188px - 100svh); }
+
+  /* card +100 vai pro topo; card 4.9 continua onde está (embaixo) */
+  .float-rate--right { bottom: clamp(165px, 42vw, 220px); }
+  .float-card--left { top: clamp(150px, 34vw, 196px); bottom: auto; }
 }
 
 @media (max-width: 480px) {
