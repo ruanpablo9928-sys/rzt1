@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ruanzitwo — Editor de Vídeo</title>
+  <meta name="description" content="ruanzitwo — editor de vídeo. Orçamento pelo WhatsApp.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:,">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="ruanzitwo — Editor de Vídeo">
+  <meta property="og:description" content="Editor de vídeo. Orçamento pelo WhatsApp.">
+  <meta property="og:locale" content="pt_BR">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000; color: #eaeaea;
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      height: 100svh; overflow: hidden;
+      display: flex; flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px 24px; flex-wrap: wrap;
+      padding: clamp(18px, 3vw, 32px) clamp(20px, 4vw, 48px);
+    }
+    h1 { font-size: 1.1rem; font-weight: 600; letter-spacing: -.01em; }
+    header p { color: #8a8a8a; font-size: .88rem; }
+    .hright { display: flex; align-items: center; gap: 16px; }
+    .ext { position: relative; }
+    .plus {
+      width: 34px; height: 34px; border-radius: 999px;
+      display: flex; align-items: center; justify-content: center;
+      background: none; border: 1px solid #2a2a2a; color: #8a8a8a;
+      font-size: 1.25rem; line-height: 1; cursor: pointer;
+      transition: color .2s, border-color .2s, transform .25s;
+    }
+    .plus:hover { color: #fff; border-color: #666; }
+    .plus[aria-expanded="true"] { transform: rotate(45deg); color: #fff; border-color: #666; }
+    .ext__menu {
+      position: absolute; right: 0; top: calc(100% + 10px); z-index: 20;
+      min-width: 240px; padding: 8px;
+      background: #0c0c0e; border: 1px solid #222; border-radius: 12px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.65);
+    }
+    .ext__menu span { display: block; padding: 6px 10px 8px; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: #666; }
+    .ext__menu a { display: flex; flex-direction: column; gap: 2px; padding: 10px; border-radius: 8px; font-size: .95rem; }
+    .ext__menu a:hover { background: #17171a; }
+    .ext__menu a small { color: #8a8a8a; font-size: .78rem; }
+
+    /* ---- carrossel ---- */
+    .carousel { position: relative; flex: 1; min-height: 0; display: flex; }
+    .track {
+      list-style: none;
+      display: flex; align-items: center; gap: clamp(12px, 2vw, 24px);
+      width: 100%;
+      overflow-x: auto; overscroll-behavior-x: contain;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+    }
+    .track::-webkit-scrollbar { display: none; }
+    .track li { flex: 0 0 auto; scroll-snap-align: center; }
+    .track video {
+      height: min(66svh, 680px); max-width: 86vw;
+      aspect-ratio: 9 / 16; object-fit: cover; display: block;
+      background: #101010; border: 1px solid #1e1e1e;
+      cursor: pointer;
+      will-change: transform, filter;
+    }
+
+    .arrow {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 44px; height: 44px; border-radius: 999px;
+      display: none; align-items: center; justify-content: center;
+      background: rgba(0,0,0,.55); border: 1px solid #2a2a2a; color: #8a8a8a;
+      font-size: 1.5rem; line-height: 1; cursor: pointer;
+      transition: color .2s, border-color .2s;
+    }
+    .arrow:hover { color: #fff; border-color: #666; }
+    .arrow--prev { left: clamp(10px, 2vw, 28px); }
+    .arrow--next { right: clamp(10px, 2vw, 28px); }
+    @media (hover: hover) { .arrow { display: flex; } }
+
+    /* ---- contato: só ícones ---- */
+    footer {
+      display: flex; align-items: center; gap: clamp(20px, 3.4vw, 34px);
+      padding: clamp(16px, 3vw, 28px) clamp(20px, 4vw, 48px);
+    }
+    footer a { color: #8a8a8a; transition: color .2s; display: inline-flex; }
+    footer a:hover { color: #fff; }
+    footer svg { width: 22px; height: 22px; }
+    footer small { margin-left: auto; color: #555; font-size: .8rem; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>ruanzitwo</h1>
+    <div class="hright">
+      <p>Editor de vídeo</p>
+      <div class="ext">
+        <button class="plus" id="plus" type="button" aria-label="Extensões" aria-expanded="false" aria-controls="ext-menu">+</button>
+        <div class="ext__menu" id="ext-menu" hidden>
+          <span>Extensões</span>
+          <a href="multitools">MultiTools <small>painel pro After Effects</small></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="carousel">
+    <button class="arrow arrow--prev" id="prev" type="button" aria-label="Vídeo anterior">‹</button>
+    <ul class="track" id="track" aria-label="Vídeos de exemplo">
+      <li><video src="works/work1.mp4" muted loop playsinline preload="metadata" aria-label="Vídeo de exemplo 1"></video></li>
+      <li><video src="works/work2.mp4" muted loop playsinline preload="metadata" aria-label="Vídeo de exemplo 2"></video></li>
+      <li><video src="works/work3.mp4" muted loop playsinline preload="metadata" aria-label="Vídeo de exemplo 3"></video></li>
+      <li><video src="works/work4.mp4" muted loop playsinline preload="metadata" aria-label="Vídeo de exemplo 4"></video></li>
+      <li><video src="works/work5.mp4" muted loop playsinline preload="metadata" aria-label="Vídeo de exemplo 5"></video></li>
+      <li><video src="works/work6.mp4" muted loop playsinline preload="metadata" aria-label="Vídeo de exemplo 6"></video></li>
+      <li><video src="works/work7.mp4" muted loop playsinline preload="metadata" aria-label="Vídeo de exemplo 7"></video></li>
+    </ul>
+    <button class="arrow arrow--next" id="next" type="button" aria-label="Próximo vídeo">›</button>
+  </div>
+
+  <footer>
+    <a href="https://wa.me/5588996126717" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp (88) 99612-6717">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.5 15.2L2 22l4.9-1.3A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-2.9.8.8-2.8-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.25-.13-1.5-.74-1.73-.82-.23-.09-.4-.13-.57.13-.17.25-.65.82-.8.99-.15.17-.3.19-.55.06-1.5-.75-2.48-1.34-3.47-3.03-.26-.45.26-.42.74-1.39.08-.17.04-.31-.02-.44-.06-.13-.57-1.38-.78-1.89-.2-.49-.41-.42-.57-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1s.9 2.43 1.03 2.6c.13.17 1.77 2.7 4.3 3.79.6.26 1.07.41 1.43.53.6.19 1.15.16 1.58.1.48-.07 1.5-.61 1.71-1.2.21-.59.21-1.1.15-1.2-.06-.11-.23-.17-.48-.29z"/></svg>
+    </a>
+    <a href="https://instagram.com/ofruanzitwo" target="_blank" rel="noopener noreferrer" aria-label="Instagram @ofruanzitwo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+    </a>
+    <a href="https://tiktok.com/@ruanzitwo" target="_blank" rel="noopener noreferrer" aria-label="TikTok @ruanzitwo">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16 3c.3 2 1.6 3.6 3.6 3.9v2.6c-1.3 0-2.5-.4-3.6-1v5.7a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v2.7a2.9 2.9 0 1 0 2 2.8V3H16z"/></svg>
+    </a>
+    <small>© 2026 ruanzitwo</small>
+  </footer>
+
+  <script>
+    (() => {
+      const track = document.getElementById('track');
+      const originals = Array.from(track.children);
+
+      // 3 cópias do conjunto -> loop infinito (começa no conjunto do meio)
+      for (let s = 0; s < 2; s++) originals.forEach((li) => track.appendChild(li.cloneNode(true)));
+      const slides = Array.from(track.children);
+      const vids = Array.from(track.querySelectorAll('video'));
+
+      const N = originals.length; // qtd de vídeos por conjunto
+      let P = 0, base = 0; // P = largura de um conjunto; base = posição central do conjunto do meio
+      const centerOf = (el) => el.offsetLeft - (track.clientWidth - el.clientWidth) / 2;
+      const measure = () => {
+        P = slides[N].offsetLeft - slides[0].offsetLeft;
+        base = centerOf(slides[N]);
+      };
+      const wrap = () => {
+        if (!P) { measure(); if (!P) return; track.scrollLeft = base; return; }
+        if (track.scrollLeft < base - P / 2) track.scrollLeft += P;
+        else if (track.scrollLeft > base + P / 2) track.scrollLeft -= P;
+      };
+      // efeito de foco: o slide do centro fica maior e nítido; os outros, menores e desfocados
+      const update = () => {
+        const mid = track.scrollLeft + track.clientWidth / 2;
+        const s = (slides[1].offsetLeft - slides[0].offsetLeft) || 1;
+        slides.forEach((li) => {
+          const v = li.firstElementChild;
+          const d = Math.min(Math.abs(li.offsetLeft + li.clientWidth / 2 - mid) / s, 1);
+          v.style.transform = 'scale(' + (1 - 0.22 * d).toFixed(3) + ')';
+          v.style.filter = d < 0.02 ? 'none' : 'blur(' + (3.5 * d).toFixed(2) + 'px)';
+        });
+      };
+
+      // posiciona no conjunto do meio; se a aba abriu em segundo plano (layout zerado), tenta de novo
+      const init = () => {
+        measure();
+        if (P) { track.scrollLeft = base; update(); return true; }
+        return false;
+      };
+      if (!init()) {
+        const retry = setInterval(() => { if (init()) clearInterval(retry); }, 150);
+      }
+      let raf = 0;
+      track.addEventListener('scroll', () => {
+        wrap();
+        if (!raf) raf = requestAnimationFrame(() => { raf = 0; update(); });
+      }, { passive: true });
+      window.addEventListener('resize', () => { measure(); wrap(); update(); });
+
+      // setas (desktop)
+      const step = () => slides[1].offsetLeft - slides[0].offsetLeft;
+      document.getElementById('prev').addEventListener('click', () => track.scrollBy({ left: -step(), behavior: 'smooth' }));
+      document.getElementById('next').addEventListener('click', () => track.scrollBy({ left: step(), behavior: 'smooth' }));
+
+      // vídeos visíveis tocam sozinhos (mudos); os que saem pausam
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        const v = e.target;
+        if (e.isIntersecting) v.play().catch(() => {});
+        else { v.pause(); v.muted = true; }
+      }), { threshold: .6 });
+      vids.forEach((v) => { v.muted = true; io.observe(v); });
+
+      // clique alterna o som (liga aqui, muta os outros)
+      vids.forEach((v) => v.addEventListener('click', () => {
+        if (v.muted) {
+          vids.forEach((o) => { if (o !== v) o.muted = true; });
+          v.muted = false;
+          v.play().catch(() => {});
+        } else {
+          v.muted = true;
+        }
+      }));
+
+      // menu de extensões (+)
+      const plus = document.getElementById('plus');
+      const menu = document.getElementById('ext-menu');
+      if (plus && menu) {
+        const setOpen = (o) => { menu.hidden = !o; plus.setAttribute('aria-expanded', String(o)); };
+        plus.addEventListener('click', (e) => { e.stopPropagation(); setOpen(menu.hidden); });
+        document.addEventListener('click', (e) => { if (!menu.hidden && !menu.contains(e.target) && e.target !== plus) setOpen(false); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+      }
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>MultiTools — painel pro After Effects · ruanzitwo</title>
+  <meta name="description" content="MultiTools — extensão CEP para After Effects 2020–2026 (Win/Mac), 100% portátil. 7 ferramentas + configurações, tudo nativo do AE.">
+  <meta name="theme-color" content="#000000">
+  <link rel="icon" href="data:,">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="MultiTools — o painel completo 🧰">
+  <meta property="og:description" content="Extensão CEP para After Effects 2020–2026. 7 ferramentas, tudo nativo do AE, nada pré-renderizado.">
+  <meta property="og:locale" content="pt_BR">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000; --card: #0b0b0d; --line: #1c1c22; --line-2: #26262e;
+      --fg: #eaeaea; --dim: #8a8a8a; --faint: #5a5a5f;
+      --ac: #8b5cf6; --ac-2: #6366f1;
+    }
+    body {
+      background: var(--bg); color: var(--fg);
+      font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+      line-height: 1.55; -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    ::selection { background: var(--ac); color: #fff; }
+
+    .wrap { max-width: 1080px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+
+    /* topo */
+    .top {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; align-items: center; gap: 16px;
+      padding: 14px clamp(20px, 4vw, 48px);
+      background: rgba(0,0,0,.7); border-bottom: 1px solid var(--line);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    }
+    .top a.back { color: var(--dim); font-size: .9rem; transition: color .2s; }
+    .top a.back:hover { color: #fff; }
+    .top .mini {
+      margin-left: auto;
+      font-size: .82rem; font-weight: 600; padding: 8px 16px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--ac), var(--ac-2)); color: #fff;
+      transition: opacity .2s;
+    }
+    .top .mini:hover { opacity: .85; }
+
+    /* hero */
+    .hero {
+      position: relative;
+      padding: clamp(56px, 9vw, 110px) 0 clamp(40px, 6vw, 70px);
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: -40% -20% auto; height: 130%;
+      background: radial-gradient(46% 60% at 50% 20%, rgba(139, 92, 246, .16), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-grid { position: relative; display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-size: .7rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      color: #c4b5fd; background: rgba(139, 92, 246, .12);
+      border: 1px solid rgba(139, 92, 246, .35);
+      padding: 7px 14px; border-radius: 999px;
+    }
+    .hero h1 {
+      margin-top: 20px;
+      font-size: clamp(2.6rem, 7vw, 4.4rem); font-weight: 700; letter-spacing: -.03em; line-height: 1;
+    }
+    .hero h1 em { font-style: normal; background: linear-gradient(135deg, #c4b5fd, var(--ac)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .hero .tag { margin-top: 10px; font-size: clamp(1.1rem, 2.6vw, 1.4rem); color: var(--dim); }
+    .hero .lead { margin-top: 18px; max-width: 52ch; color: var(--dim); font-size: .98rem; }
+    .hero .lead strong { color: var(--fg); font-weight: 600; }
+    .cta-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin-top: 30px; }
+    .btn-dl {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 16px 30px; border-radius: 14px;
+      background: linear-gradient(135deg, var(--ac), var(--ac-2)); color: #fff;
+      font-size: 1.02rem; font-weight: 700;
+      box-shadow: 0 12px 40px rgba(139, 92, 246, .35);
+      transition: transform .25s, box-shadow .25s;
+    }
+    .btn-dl:hover { transform: translateY(-2px); box-shadow: 0 18px 50px rgba(139, 92, 246, .45); }
+    .btn-dl svg { width: 20px; height: 20px; }
+    .cta-note { color: var(--faint); font-size: .84rem; }
+
+    /* stats */
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; margin-top: clamp(36px, 6vw, 60px); }
+    .stats div { padding: clamp(16px, 2.6vw, 26px); border-right: 1px solid var(--line); background: var(--card); }
+    .stats div:last-child { border-right: none; }
+    .stats b { display: block; font-size: clamp(1.2rem, 2.6vw, 1.7rem); font-weight: 700; letter-spacing: -.01em; }
+    .stats span { color: var(--dim); font-size: .78rem; }
+
+    /* seções */
+    section.tool { padding: clamp(34px, 6vw, 60px) 0; border-top: 1px solid var(--line); }
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(26px, 5vw, 60px); align-items: center; }
+    .tool-grid.rev > .txt { order: 2; }
+    .tool h2 { font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 700; letter-spacing: -.02em; }
+    .tool .txt p { margin-top: 14px; color: var(--dim); font-size: .96rem; }
+    .tool .txt p strong, .tool .txt li strong { color: var(--fg); font-weight: 600; }
+    .tool .txt ul { margin-top: 14px; padding-left: 0; list-style: none; display: grid; gap: 10px; }
+    .tool .txt li { color: var(--dim); font-size: .95rem; padding-left: 20px; position: relative; }
+    .tool .txt li::before { content: ""; position: absolute; left: 0; top: .55em; width: 8px; height: 8px; border-radius: 2px; background: linear-gradient(135deg, var(--ac), var(--ac-2)); }
+
+    /* cards simples (ferramentas sem mockup) */
+    .duo { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(14px, 2vw, 22px); }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: clamp(22px, 3.4vw, 34px); }
+    .card h2 { font-size: 1.3rem; }
+    .card p { margin-top: 12px; color: var(--dim); font-size: .94rem; }
+    .card p strong { color: var(--fg); font-weight: 600; }
+
+    /* ===== mockups dos painéis (recriados em CSS) ===== */
+    .panel {
+      background: #101012; border: 1px solid var(--line-2); border-radius: 14px;
+      overflow: hidden; font-size: .8rem;
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+    }
+    .panel-hd {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 14px; border-bottom: 1px solid var(--line);
+      font-weight: 700; letter-spacing: .12em; font-size: .72rem; text-transform: uppercase;
+    }
+    .panel-hd .x { margin-left: auto; color: var(--faint); font-weight: 400; font-size: .9rem; }
+    .panel-bd { padding: 14px; }
+    .plabel { font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); }
+
+    /* painel principal */
+    .tool-row { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; background: #141417; margin-top: 8px; }
+    .tool-row i {
+      flex: none; width: 30px; height: 30px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      background: #1c1c21; color: #b6b6c2; font-style: normal; font-size: .85rem;
+    }
+    .tool-row b { display: block; font-size: .8rem; font-weight: 600; }
+    .tool-row small { color: var(--faint); font-size: .68rem; display: block; margin-top: 1px; }
+    .tool-row .go { margin-left: auto; color: var(--faint); }
+
+    /* preview escuro */
+    .pv { position: relative; background: #060607; border: 1px solid var(--line); border-radius: 10px; height: 150px; overflow: hidden; margin-bottom: 12px; }
+
+    /* texto elástico */
+    .pv .elastic {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.15rem; letter-spacing: .04em; color: #fff;
+      text-shadow: 0 0 18px rgba(255,255,255,.55);
+      animation: elastic 2.6s cubic-bezier(.2, 1.4, .3, 1) infinite;
+    }
+    @keyframes elastic {
+      0% { transform: scale(.6); opacity: 0; }
+      18% { transform: scale(1.08); opacity: 1; }
+      30% { transform: scale(.98); }
+      42% { transform: scale(1.02); }
+      55%, 82% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+    .mode-row { display: flex; align-items: center; justify-content: space-between; margin: 4px 0 12px; }
+    .pills { display: flex; gap: 6px; }
+    .pill { padding: 6px 13px; border-radius: 7px; border: 1px solid var(--line-2); color: var(--dim); font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    .pill.on { background: #fff; color: #000; border-color: #fff; }
+    .sl { display: grid; grid-template-columns: 86px 1fr 40px; align-items: center; gap: 12px; padding: 5px 0; }
+    .sl span { color: var(--dim); font-size: .74rem; }
+    .sl .t { position: relative; height: 2px; background: #2b2b31; border-radius: 2px; }
+    .sl .t i { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 11px; height: 11px; border-radius: 999px; background: #fff; }
+    .sl b { text-align: right; font-size: .74rem; font-weight: 600; }
+    .presets { display: flex; gap: 6px; margin-top: 12px; }
+    .presets .pill { flex: 1; text-align: center; }
+
+    /* text exploder */
+    .pv .playhead { position: absolute; left: 26%; top: 10px; bottom: 10px; border-left: 1px dashed #3a3a42; }
+    .pv .playhead::before { content: "PLAYHEAD"; position: absolute; top: -2px; left: 8px; font-size: .56rem; letter-spacing: .12em; color: var(--faint); }
+    .pv .frag { position: absolute; color: #cfcfd6; font-weight: 700; font-size: .9rem; animation: drift 3s ease-in-out infinite alternate; }
+    @keyframes drift { to { translate: 0 -6px; } }
+    .note {
+      display: flex; gap: 10px; align-items: flex-start;
+      background: #141417; border: 1px solid var(--line); border-radius: 10px;
+      padding: 12px; color: var(--dim); font-size: .74rem; margin-top: 12px;
+    }
+    .note strong { color: var(--fg); font-weight: 600; }
+
+    /* ícones */
+    .search { display: flex; align-items: center; gap: 10px; margin: 10px 0 12px; }
+    .search .field { flex: 1; background: #060607; border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 12px; color: var(--fg); font-size: .78rem; }
+    .search small { color: var(--faint); font-size: .68rem; white-space: nowrap; }
+    .icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 7px; }
+    .icon-grid i {
+      aspect-ratio: 1; border-radius: 8px; background: #141417; border: 1px solid var(--line);
+      display: flex; align-items: center; justify-content: center;
+      font-style: normal; font-weight: 700; color: #9a9aa6; font-size: .95rem;
+    }
+    .icon-grid i:nth-child(3n) { color: #c9c9d4; }
+    .icon-grid i:nth-child(4n) { font-size: .8rem; }
+    .dots { display: flex; gap: 8px; margin-top: 12px; }
+    .dots i { width: 16px; height: 16px; border-radius: 999px; border: 1px solid rgba(255,255,255,.18); }
+    .check { display: flex; align-items: center; gap: 8px; margin-top: 12px; color: var(--dim); font-size: .74rem; }
+    .check i { width: 14px; height: 14px; border-radius: 4px; background: linear-gradient(135deg, var(--ac), var(--ac-2)); display: flex; align-items: center; justify-content: center; color: #fff; font-size: .6rem; font-style: normal; }
+    .select { display: flex; align-items: center; justify-content: space-between; background: #060607; border: 1px solid var(--line-2); border-radius: 8px; padding: 8px 12px; color: var(--dim); font-size: .74rem; margin-top: 12px; }
+
+    /* elementos */
+    .tabs { display: flex; gap: 6px; margin: 10px 0 12px; }
+    .el-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .el {
+      background: #141417; border: 1px solid var(--line); border-radius: 10px;
+      padding: 14px 8px 12px; text-align: center;
+    }
+    .el svg { width: 22px; height: 22px; stroke: #a8a8b4; fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .el b { display: block; margin-top: 8px; font-size: .64rem; font-weight: 600; color: #c6c6d0; }
+
+    /* vídeo de demonstração */
+    .demo-video {
+      display: block; width: 100%; aspect-ratio: 1; object-fit: cover;
+      background: #060607; border: 1px solid var(--line-2); border-radius: 14px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+    }
+
+    /* capô */
+    .hood { border-top: 1px solid var(--line); padding: clamp(34px, 6vw, 60px) 0; }
+    .hood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 2vw, 22px); margin-top: 26px; }
+    .req { margin-top: 22px; color: var(--faint); font-size: .86rem; }
+    .req strong { color: var(--dim); font-weight: 600; }
+
+    /* cta final */
+    .final { border-top: 1px solid var(--line); padding: clamp(50px, 9vw, 100px) 0; text-align: center; position: relative; overflow: hidden; }
+    .final::before { content: ""; position: absolute; inset: auto -20% -80%; height: 160%; background: radial-gradient(50% 50% at 50% 50%, rgba(139, 92, 246, .18), transparent 70%); pointer-events: none; }
+    .final h2 { position: relative; font-size: clamp(1.9rem, 5vw, 3rem); font-weight: 700; letter-spacing: -.02em; }
+    .final p { position: relative; color: var(--dim); margin-top: 10px; }
+    .final .btn-dl { position: relative; margin-top: 28px; }
+
+    footer { border-top: 1px solid var(--line); padding: 22px clamp(20px, 4vw, 48px); display: flex; gap: 16px; align-items: center; color: var(--faint); font-size: .82rem; }
+    footer small { margin-left: auto; }
+
+    /* reveal */
+    .rv { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .rv.in { opacity: 1; transform: none; }
+
+    @media (max-width: 860px) {
+      .hero-grid, .tool-grid { grid-template-columns: 1fr; }
+      .tool-grid.rev > .txt { order: 0; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .stats div:nth-child(2) { border-right: none; }
+      .stats div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .duo, .hood-grid { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rv { opacity: 1; transform: none; transition: none; }
+      .pv .elastic, .pv .frag { animation: none; opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top">
+    <a class="back" href="bemvindos">‹ ruanzitwo</a>
+    <a class="mini" href="MultiTools.zip" download>Baixar</a>
+  </div>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="badge">Extensão CEP · AE 2020–2026 · Win/Mac</span>
+        <h1><em>MultiTools</em></h1>
+        <p class="tag">o painel completo 🧰</p>
+        <p class="lead">
+          Extensão CEP para After Effects 2020–2026 (Win/Mac), <strong>100% portátil</strong>.
+          Painel minimalista com <strong>7 ferramentas + configurações</strong>. Tudo que ela cria é
+          <strong>nativo do AE</strong> (shape layers, keyframes, expressões, animators) —
+          nada de footage pré-renderizado, tudo editável depois.
+        </p>
+        <div class="cta-row">
+          <a class="btn-dl" href="MultiTools.zip" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/></svg>
+            Baixar MultiTools
+          </a>
+          <span class="cta-note">Grátis · 100% portátil</span>
+        </div>
+      </div>
+
+      <!-- mockup: painel principal -->
+      <div class="panel rv" aria-hidden="true">
+        <div class="panel-hd">⧉ Multi Tools <span class="x">⚙</span></div>
+        <div class="panel-bd">
+          <span class="plabel">Ferramentas</span>
+          <div class="tool-row"><i>〜</i><span><b>Elástico</b><small>Overshoot elástico em keyframes</small></span><span class="go">›</span></div>
+          <div class="tool-row"><i>Aa</i><span><b>Texto Elástico</b><small>Entrada elástica por letra ou palavra</small></span><span class="go">›</span></div>
+          <div class="tool-row"><i>✳</i><span><b>Text Exploder</b><small>Explode o texto em partículas no playhead</small></span><span class="go">›</span></div>
+          <div class="tool-row"><i>✂</i><span><b>Quebrar Palavras</b><small>Divide o texto em camadas editáveis</small></span><span class="go">›</span></div>
+          <div class="tool-row"><i>▣</i><span><b>Ícones</b><small>287 locais + 200 mil online — shape layer</small></span><span class="go">›</span></div>
+          <div class="tool-row"><i>⌗</i><span><b>Elementos</b><small>UIs prontas (chat, celular…) + bonecos</small></span><span class="go">›</span></div>
+          <div class="tool-row"><i>🎙</i><span><b>Legendas IA</b><small>Transcrição automática (Whisper)</small></span><span class="go">›</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="stats rv">
+        <div><b>7</b><span>ferramentas + config</span></div>
+        <div><b>287</b><span>ícones offline</span></div>
+        <div><b>200 mil+</b><span>ícones online</span></div>
+        <div><b>2020–26</b><span>After Effects · Win/Mac</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ELÁSTICO + QUEBRAR PALAVRAS ============ -->
+  <section class="tool">
+    <div class="wrap duo">
+      <div class="card rv">
+        <h2>🌊 Elástico</h2>
+        <p>
+          Aplica <strong>overshoot elástico</strong> nos keyframes das camadas selecionadas — qualquer propriedade
+          animada (posição, escala, rotação...). Modal com <strong>preview da curva ao vivo</strong> e sliders de
+          Amplitude, Frequência e Decaimento + 4 presets (Suave → Elástico).
+        </p>
+        <p>
+          A expressão é <strong>relativa aos keyframes</strong> (nearestKey), então você pode mover camadas e
+          keyframes na timeline depois que o elástico continua certinho.
+        </p>
+      </div>
+      <div class="card rv">
+        <h2>✂️ Quebrar Palavras</h2>
+        <p>
+          Divide uma frase em camadas separadas por <strong>palavra, letra ou linha</strong> — mantendo posição,
+          estilo e a animação original de cada trecho.
+        </p>
+        <p>
+          Opções: manter a camada original e criar <strong>nulls de controle</strong> pra mover cada palavra
+          livremente mesmo quando a Position tem expressão/keyframes. É a base pra staggerar palavra por palavra na timeline.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TEXTO ELÁSTICO ============ -->
+  <section class="tool">
+    <div class="wrap tool-grid">
+      <div class="txt rv">
+        <h2>🔤 Texto Elástico</h2>
+        <p>
+          Entrada elástica pra texto via <strong>Text Animator</strong> (posição + opacidade), por
+          <strong>letras ou palavras</strong>, com Delay / Frequência / Amplitude / Decaimento / Velocidade
+          e preview animado.
+        </p>
+        <p>Presets <strong>Suave / Padrão / Forte / Cascata</strong>.</p>
+      </div>
+      <div class="panel rv" aria-hidden="true">
+        <div class="panel-hd">Texto Elástico <span class="x">✕</span></div>
+        <div class="panel-bd">
+          <div class="pv"><div class="elastic">Multi Tools Preview</div></div>
+          <div class="mode-row">
+            <span class="plabel">Modo</span>
+            <div class="pills"><span class="pill">Letras</span><span class="pill on">Palavras</span></div>
+          </div>
+          <div class="sl"><span>Delay</span><div class="t"><i style="left:14%"></i></div><b>3</b></div>
+          <div class="sl"><span>Frequência</span><div class="t"><i style="left:11%"></i></div><b>2.5</b></div>
+          <div class="sl"><span>Amplitude</span><div class="t"><i style="left:28%"></i></div><b>150</b></div>
+          <div class="sl"><span>Decaimento</span><div class="t"><i style="left:22%"></i></div><b>7.0</b></div>
+          <div class="sl"><span>Velocidade</span><div class="t"><i style="left:8%"></i></div><b>1.0x</b></div>
+          <div class="presets">
+            <span class="pill">Suave</span><span class="pill on">Padrão</span><span class="pill">Forte</span><span class="pill">Cascata</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TEXT EXPLODER ============ -->
+  <section class="tool">
+    <div class="wrap tool-grid rev">
+      <div class="txt rv">
+        <h2>💥 Text Exploder</h2>
+        <p>
+          Explode o texto em <strong>partículas</strong> usando 2 presets de explosão embutidos
+          (<strong>Explosão 1 e 2</strong>, com preview animado).
+        </p>
+        <p>
+          A animação começa <strong>exatamente no playhead</strong> — o painel mede onde os keyframes
+          do preset caíram e desloca tudo.
+        </p>
+      </div>
+      <div class="panel rv" aria-hidden="true">
+        <div class="panel-hd">Text Exploder <span class="x">✕</span></div>
+        <div class="panel-bd">
+          <div class="pv">
+            <span class="playhead"></span>
+            <span class="frag" style="left:38%; top:24%; transform:rotate(-24deg); animation-delay:0s">E</span>
+            <span class="frag" style="left:56%; top:14%; transform:rotate(18deg); animation-delay:.4s">8</span>
+            <span class="frag" style="left:30%; top:48%; transform:rotate(40deg); animation-delay:.2s">X</span>
+            <span class="frag" style="left:62%; top:44%; transform:rotate(-10deg); animation-delay:.6s">e</span>
+            <span class="frag" style="left:46%; top:66%; transform:rotate(28deg); animation-delay:.3s">L</span>
+            <span class="frag" style="left:72%; top:70%; transform:rotate(-32deg); animation-delay:.5s">o</span>
+          </div>
+          <div class="mode-row">
+            <span class="plabel">Estilo</span>
+            <div class="pills"><span class="pill on">Explosão 1</span><span class="pill">Explosão 2</span></div>
+          </div>
+          <div class="note">🕒 <span>Posicione o <strong>indicador de tempo</strong> onde a explosão deve começar e selecione a camada de texto.</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TUTORIAL: TEXTO VIRAL ============ -->
+  <section class="tool">
+    <div class="wrap tool-grid">
+      <div class="txt rv">
+        <span class="badge">🎓 Tutorial · MultiTools</span>
+        <h2 style="margin-top:16px">Animação de texto viral — que ninguém ensina</h2>
+        <p>
+          Aprenda a criar a <strong>animação de texto viral</strong> usada nos motions por aí —
+          aquela que ninguém ensina. Feita do zero <strong>usando o MultiTools</strong>,
+          100% nativa do AE e editável.
+        </p>
+      </div>
+      <div class="rv">
+        <video class="demo-video" src="works/multitools-texto-viral.mp4" autoplay muted loop playsinline aria-label="Tutorial: animação de texto viral com o MultiTools"></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ÍCONES ============ -->
+  <section class="tool">
+    <div class="wrap tool-grid">
+      <div class="txt rv">
+        <h2>🎨 Ícones</h2>
+        <ul>
+          <li><strong>LOCAL:</strong> 287 ícones Feather (MIT) embutidos, funcionam offline.</li>
+          <li><strong>ONLINE:</strong> busca em 200.000+ ícones open-source via API gratuita Iconify (Material, Tabler, Lucide, emojis...).</li>
+          <li><strong>1 clique</strong> = shape layer vetorial no centro da comp, 100% editável.</li>
+          <li><strong>Coloridos importam coloridos</strong> (emojis, logos, bandeiras — cor e opacidade por elemento; gradiente vira cor sólida).</li>
+          <li><strong>Animados importam animados:</strong> traço-se-desenhando vira Trim Paths, spinner vira rotação em loop, preenchido vira pop — no playhead, com a duração do SVG original. Seletor Auto/Desenhar/Pop/Girar/Sem.</li>
+          <li>Controles: tamanho, espessura do traço, 8 cores, e <strong>"Separar em shapes"</strong> — cada parte vira uma camada com pivô próprio + entrada em cascata.</li>
+        </ul>
+      </div>
+      <div class="panel rv" aria-hidden="true">
+        <div class="panel-hd">Ícones <span class="x">✕</span></div>
+        <div class="panel-bd">
+          <div class="mode-row">
+            <span class="plabel">Fonte</span>
+            <div class="pills"><span class="pill">Local (287)</span><span class="pill on">Online 200mil+</span></div>
+          </div>
+          <div class="search"><span class="field">Google</span><small>96 resultados</small></div>
+          <div class="icon-grid">
+            <i>G</i><i>G</i><i>G</i><i>G</i><i>G</i><i>G</i>
+            <i>G</i><i>G</i><i>G</i><i>G</i><i>G</i><i>G</i>
+            <i>G</i><i>G</i><i>G</i><i>G</i><i>G</i><i>G</i>
+          </div>
+          <div class="sl" style="margin-top:12px"><span>Tamanho</span><div class="t"><i style="left:18%"></i></div><b>200px</b></div>
+          <div class="sl"><span>Espessura</span><div class="t"><i style="left:24%"></i></div><b>2.0</b></div>
+          <div class="check"><i>✓</i> Separar em shapes (1 camada por parte + cascata)</div>
+          <div class="select"><span>Animação</span><span>Auto — animado importa animado ▾</span></div>
+          <div class="dots">
+            <i style="background:#fff"></i><i style="background:#141417"></i><i style="background:#ef4444"></i><i style="background:#22c55e"></i>
+            <i style="background:#eab308"></i><i style="background:#3b82f6"></i><i style="background:#8b5cf6"></i><i style="background:#ec4899"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DEMO: SEPARAR EM PARTES ============ -->
+  <section class="tool">
+    <div class="wrap tool-grid">
+      <div class="txt rv">
+        <span class="badge">🎨 Ícones · demonstração</span>
+        <h2 style="margin-top:16px">Separar em partes — 1 camada por pedaço do ícone</h2>
+        <p>
+          Cada pedaço vira uma <strong>shape layer independente</strong>, com o pivô no próprio centro —
+          pronta pra girar, escalar e mover sozinha. Com animação ligada, as partes entram em
+          <strong>cascata</strong>, uma atrás da outra.
+        </p>
+        <p>Ex: a maçã 🍎 vira <strong>fruta + folha + cabinho</strong>, 3 camadas.</p>
+      </div>
+      <div class="rv">
+        <video class="demo-video" src="works/multitools-separar.mp4" autoplay muted loop playsinline aria-label="Demonstração: separar ícone em partes"></video>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ELEMENTOS ============ -->
+  <section class="tool">
+    <div class="wrap tool-grid rev">
+      <div class="txt rv">
+        <h2>🧩 Elementos</h2>
+        <p>Quatro categorias:</p>
+        <ul>
+          <li><strong>UI PRONTAS</strong> — 10 templates construídos na hora como shape layers por partes, presas num NULL de controle, escaladas pra comp: Chat conversa, Chat IA, Celular, Navegador, Notificação, Player, Terminal, Barra de IA (com glow), Medidor circular, Estatísticas. Checkbox "Animar entrada" = as partes montam em cascata no playhead. Textos dos widgets são text layers editáveis.</li>
+          <li><strong>APPS</strong> — 30 ícones estilo iOS (squircle + brilho + glifo) com a paleta da Apple: Telefone, Mensagens, Música, Ajustes, Clima, Saúde...</li>
+          <li><strong>BONECOS</strong> — busca pessoas/personagens full-color nos sets de emoji.</li>
+          <li><strong>FORMAS</strong> — 4.000+ formas detalhadas (game-icons, healthicons).</li>
+        </ul>
+      </div>
+      <div class="panel rv" aria-hidden="true">
+        <div class="panel-hd">Elementos <span class="x">✕</span></div>
+        <div class="panel-bd">
+          <div class="mode-row">
+            <span class="plabel">Tipo</span>
+            <div class="pills"><span class="pill on">UI</span><span class="pill">Apps</span><span class="pill">Bonecos</span><span class="pill">Formas</span></div>
+          </div>
+          <div class="el-grid">
+            <div class="el"><svg viewBox="0 0 24 24"><path d="M4 5h11v8H8l-4 3zM13 13h7v6h-3l-2 2v-2h-2z"/></svg><b>Chat conversa</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="12" rx="2"/><path d="M8 9h8M8 13h5"/></svg><b>Chat IA</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 18h2"/></svg><b>Celular</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 9h18M6 7h.01M9 7h.01"/></svg><b>Navegador</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="8" rx="2"/><circle cx="8" cy="12" r="1"/></svg><b>Notificação</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M10 9.5v5l4-2.5z"/></svg><b>Player</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2"/><path d="M7 9l3 3-3 3M12 15h5"/></svg><b>Terminal</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><rect x="4" y="9" width="16" height="6" rx="3"/><path d="M8 12h.01"/></svg><b>Barra de IA</b></div>
+            <div class="el"><svg viewBox="0 0 24 24"><path d="M6 18a7 7 0 1 1 12 0"/><path d="M12 14l3-4"/></svg><b>Medidor</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LEGENDAS IA + CONFIG ============ -->
+  <section class="tool">
+    <div class="wrap duo">
+      <div class="card rv">
+        <h2>🎙️ Legendas IA</h2>
+        <p>
+          Transcrição automática via <strong>Whisper (Groq)</strong>: renderiza o áudio da comp (template "WAV"),
+          transcreve com <strong>timestamp palavra por palavra</strong>, mostra o texto pra você revisar/editar,
+          e cria as legendas — como camada única animada (Source Text) ou camadas separadas por palavra.
+        </p>
+      </div>
+      <div class="card rv">
+        <h2>⚙️ Configurações</h2>
+        <p>
+          Chave API Groq, toggle de notificações, botão <strong>LIMPAR MEMÓRIA DO AE</strong>
+          (purge de caches pra destravar), e o PIX de apoio 💜.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ POR BAIXO DO CAPÔ ============ -->
+  <section class="hood">
+    <div class="wrap">
+      <h2 class="rv" style="font-size: clamp(1.5rem, 3.4vw, 2.1rem); font-weight: 700; letter-spacing: -.02em;">Por baixo do capô</h2>
+      <div class="hood-grid">
+        <div class="card rv"><p><strong>Undo limpo.</strong> Tudo em undo groups (Ctrl+Z limpo), erros mostram o motivo real no toast.</p></div>
+        <div class="card rv"><p><strong>Respeita o playhead.</strong> Ferramentas de animação começam exatamente onde você está na timeline.</p></div>
+        <div class="card rv"><p><strong>Otimizado.</strong> Coleta de lixo após criar ícones (o AE não acumula mais memória), fusão de grupos de mesma cor, redução de vértices — pra não travar com o uso.</p></div>
+      </div>
+      <p class="req rv"><strong>Requisitos:</strong> internet só pro modo online/legendas; chave Groq só pra Legendas IA.</p>
+    </div>
+  </section>
+
+  <!-- ============ CTA FINAL ============ -->
+  <section class="final">
+    <div class="wrap">
+      <h2>Bora acelerar seu fluxo no AE?</h2>
+      <p>After Effects 2020–2026 · Windows &amp; Mac · 100% portátil</p>
+      <a class="btn-dl" href="MultiTools.zip" download>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/></svg>
+        Baixar MultiTools
+      </a>
+    </div>
+  </section>
+
+  <footer>
+    <a href="bemvindos">‹ voltar pro site</a>
+    <small>© 2026 ruanzitwo</small>
+  </footer>
+
+  <script>
+    // revela as seções conforme entram na tela
+    (() => {
+      const els = document.querySelectorAll('.rv');
+      if (!('IntersectionObserver' in window)) { els.forEach(e => e.classList.add('in')); return; }
+      const io = new IntersectionObserver((es) => es.forEach((e) => {
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      }), { threshold: .12 });
+      els.forEach((e) => io.observe(e));
+    })();
+  </script>
+
+</body>
+</html>
